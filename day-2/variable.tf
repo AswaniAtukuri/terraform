@@ -16,3 +16,8 @@ variable "key" {
     default = ""
   
 }
+variable "bucket" {
+    type = string
+    default = ""
+  
+}
