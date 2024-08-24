@@ -80,6 +80,40 @@ resource "aws_security_group" "name" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+#allocate eip
+ 
+resource "aws_eip" "name" {
+  
+}
+#NAT GateWay creation
+
+resource "aws_nat_gateway" "public" {
+  subnet_id = aws_subnet.public.id
+  allocation_id = aws_eip.name.id
+  tags = {
+    name = "nat"
+  }
+  
+} 
+#create private route table and attach to natgateway
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.cust.id
+  route {
+    nat_gateway_id = aws_nat_gateway.public.id
+    cidr_block = "0.0.0.0/0"
+  }
+  
+}
+#private subnet association add subnet into private rt
+resource "aws_route_table_association" "private" {
+  route_table_id = aws_route_table.private.id
+  subnet_id = aws_subnet.private.id
+  
+}
+
+
+
+
 
 
 
